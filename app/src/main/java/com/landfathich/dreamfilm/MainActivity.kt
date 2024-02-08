@@ -1,52 +1,49 @@
 package com.landfathich.dreamfilm
 
+import android.annotation.SuppressLint
 import android.os.Bundle
+import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.ValueEventListener
+import com.landfathich.dreamfilm.Fragments.HomeFragment
+import com.landfathich.dreamfilm.MovieRepo.Singleton.databaseRef
 import com.landfathich.dreamfilm.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
+    @SuppressLint("RestrictedApi")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = ActivityMainBinding.inflate(layoutInflater)
-        val view = binding.root
-        setContentView(view)
+        setContentView(R.layout.activity_main)
 
-        initNavigation()
-    }
 
-    private fun initNavigation() {
-        binding.topAppBar.setOnMenuItemClickListener {
-            when (it.itemId) {
-                R.id.settings -> {
-                    // Toast.makeText(this, "Settings", Toast.LENGTH_SHORT).show()
-                    true
-                }
-
-                else -> false
-            }
+        // get the data from the database
+        val repo = MovieRepo()
+        val myCallback: () -> Unit = {
+            val transaction = supportFragmentManager.beginTransaction()
+            transaction.replace(R.id.fragment_container , HomeFragment(this))
+            transaction.addToBackStack(null)
+            transaction.commit()
         }
 
-        binding.bottomNavigation.setOnItemSelectedListener {
-            when (it.itemId) {
-                R.id.favorites -> {
-                    // Toast.makeText(this, "Favorites", Toast.LENGTH_SHORT).show()
-                    true
-                }
+        repo.fetchTmdbConfig("f822ee258fb1f07774b09e5ba51e04e7")
+        repo.fetchTrendingMoviesFromTMDB("f822ee258fb1f07774b09e5ba51e04e7")
+        repo.PopularMovies(myCallback)
 
-                R.id.watch_later -> {
-                    // Toast.makeText(this, "Watch later", Toast.LENGTH_SHORT).show()
-                    true
-                }
 
-                R.id.selections -> {
-                    // Toast.makeText(this, "Selections", Toast.LENGTH_SHORT).show()
-                    true
-                }
 
-                else -> false
-            }
+        /*
+        repo.updateData{
+            //inflate the home fragement into the main view once the data is collected
+            val transaction = supportFragmentManager.beginTransaction()
+            transaction.replace(R.id.fragment_container , HomeFragment(this))
+            transaction.addToBackStack(null)
+            transaction.commit()
         }
+
+         */
     }
 }
