@@ -13,6 +13,8 @@ import kotlinx.coroutines.*
 import java.net.HttpURLConnection
 import java.net.URL
 import com.google.gson.Gson
+import com.landfathich.dreamfilm.MovieRepo.Singleton.inc
+import com.landfathich.dreamfilm.MovieRepo.Singleton.movieFav
 import com.landfathich.dreamfilm.MovieRepo.Singleton.movieListTrend
 import com.landfathich.dreamfilm.adapter.MovieAdapter
 
@@ -24,6 +26,8 @@ class MovieRepo {
         var imageBaseUrl: String = "" // Store the base URL for images
         val movieList = arrayListOf<MovieModel>()
         val movieListTrend = arrayListOf<MovieModel>()
+        val movieFav = arrayListOf<MovieModel>()
+        var inc : Int = 0
     }
 
     val existingMovieIds = mutableSetOf<String>()
@@ -109,17 +113,18 @@ class MovieRepo {
                 movieListTrend.clear()
                 movieResponse.results.forEach { movie ->
                     val posterUrl = Singleton.imageBaseUrl + "w185" + movie.poster_path
+                    val isLiked = existingMovieIds.contains(movie.id.toString())
                     val mappedMovie = MovieModel(
                         id = movie.id.toString(),
                         name = movie.title,
                         description = movie.overview,
                         imageUrl = posterUrl,
-                        liked = false,
+                        liked = isLiked,
                         releaseDate = movie.release_date,
                         popularity = movie.popularity
                     )
                     movieListTrend.add(mappedMovie)
-                    Log.d("MovieFetch", "Title: ${movie.popularity}, Poster URL: $posterUrl")
+                    Log.d("MovieFetch", "Title: ${movie.popularity}, Poster URL: $isLiked")
                 }
                 // Update your movie list or UI accordingly on the main thread
                 withContext(Dispatchers.Main) {
@@ -135,40 +140,45 @@ class MovieRepo {
 
 
     fun PopularMovies(callback : () -> Unit){
-
         databaseRef.addValueEventListener(object : ValueEventListener{
-
             override fun onDataChange(snapshot: DataSnapshot) {
                 existingMovieIds.clear()
-                snapshot.children.forEach {
-                    val id = it.child("id").getValue(String::class.java)
+                movieFav.clear()
+                for (datasnap in snapshot.children){
+                    val id = datasnap.child("id").getValue(String::class.java)
+                    val movie = datasnap.getValue(MovieModel::class.java)
+                    if (movie != null){
+                        movieFav.add(movie)
+                        Log.d("Favorites" , movie.name)
+                    }
                     if (id != null) {
                         existingMovieIds.add(id)
                     }
                 }
-                Log.d("get_ids", existingMovieIds.toString())
+                Log.d("get_ids", existingMovieIds.toString() + "iteration : " + inc)
+                inc = inc + 1
+                fetchTrendingMoviesFromTMDB("f822ee258fb1f07774b09e5ba51e04e7")
                 fetchPopularMoviesFromTMDB("f822ee258fb1f07774b09e5ba51e04e7") { callback() }
                 // After fetching existing movies, fetch from TMDB
-
             }
-
             override fun onCancelled(error: DatabaseError) {
                 Log.w("failed_db", "Failed to read value.", error.toException())
             }
         })
     }
 
+    /*
     fun updateData(callback : () -> Unit){
         databaseRef.addValueEventListener(object : ValueEventListener{
             override fun onDataChange(snapshot: DataSnapshot) {
                 // remove the items that were already imported
-                movieList.clear()
+                movieFav.clear()
                 // get the data from the database
                 for (datasnap in snapshot.children){
                     val movie = datasnap.getValue(MovieModel::class.java)
                     if (movie != null){
-                        movieList.add(movie)
-                        Log.d(movie.name , movie.description)
+                        movieFav.add(movie)
+                        Log.d("Favorites" , movie.name)
                     }
                 }
                 callback()
@@ -180,6 +190,8 @@ class MovieRepo {
         })
     }
 
+
+     */
     fun UpdateMovie(movie : MovieModel){
         databaseRef.child(movie.id).setValue(movie)
     }
