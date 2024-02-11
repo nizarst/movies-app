@@ -47,7 +47,7 @@ class MovieRepo {
         val popularity : Double
     )
 
-    fun fetchTmdbConfig(apiKey: String) {
+    fun fetchTmdbConfig(apiKey: String , callback : () -> Unit) {
         CoroutineScope(Dispatchers.IO).launch {
             val url = URL("https://api.themoviedb.org/3/configuration?api_key=$apiKey")
             val connection = url.openConnection() as HttpURLConnection
@@ -56,6 +56,7 @@ class MovieRepo {
                 val configResponse = Gson().fromJson(data, TmdbConfigResponse::class.java)
                 Singleton.imageBaseUrl = configResponse.images.secure_base_url // Or use base_url
                 Log.d("ConfigFetch", "Base Image URL fetched: ${Singleton.imageBaseUrl}")
+                callback()
             } catch (e: Exception) {
                 Log.e("ConfigFetch", "Error fetching TMDB config", e)
             } finally {
@@ -74,13 +75,13 @@ class MovieRepo {
                 movieList.clear()
                 movieResponse.results.forEach { movie ->
                     val posterUrl = Singleton.imageBaseUrl + "w185" + movie.poster_path
-                    val isLiked = existingMovieIds.contains(movie.id.toString())
+                    //val isLiked = existingMovieIds.contains(movie.id.toString())
                     val mappedMovie = MovieModel(
                         id = movie.id.toString(),
                         name = movie.title,
                         description = movie.overview,
                         imageUrl = posterUrl,
-                        liked = isLiked,
+                        liked = false,
                         releaseDate = movie.release_date,
                         popularity = movie.popularity
                     )
@@ -103,7 +104,7 @@ class MovieRepo {
         }
     }
 
-    fun fetchTrendingMoviesFromTMDB(apiKey: String ) {
+    fun fetchTrendingMoviesFromTMDB(apiKey: String , callback : () -> Unit) {
         CoroutineScope(Dispatchers.IO).launch {
             val url = URL("https://api.themoviedb.org/3/movie/top_rated?api_key=$apiKey&language=en-US&page=1")
             val connection = url.openConnection() as HttpURLConnection
@@ -113,22 +114,22 @@ class MovieRepo {
                 movieListTrend.clear()
                 movieResponse.results.forEach { movie ->
                     val posterUrl = Singleton.imageBaseUrl + "w185" + movie.poster_path
-                    val isLiked = existingMovieIds.contains(movie.id.toString())
+                    //val isLiked = existingMovieIds.contains(movie.id.toString())
                     val mappedMovie = MovieModel(
                         id = movie.id.toString(),
                         name = movie.title,
                         description = movie.overview,
                         imageUrl = posterUrl,
-                        liked = isLiked,
+                        liked = false,
                         releaseDate = movie.release_date,
                         popularity = movie.popularity
                     )
                     movieListTrend.add(mappedMovie)
-                    Log.d("MovieFetch", "Title: ${movie.popularity}, Poster URL: $isLiked")
+                    Log.d("MovieFetch", "Title: ${movie.popularity}, Poster URL: ${movie.popularity}")
                 }
                 // Update your movie list or UI accordingly on the main thread
                 withContext(Dispatchers.Main) {
-                    // do nothing here since there is no callback
+                    callback()
                 }
             } catch (e: Exception) {
                 Log.e("MovieFetch", "Error fetching movies", e)
@@ -157,8 +158,28 @@ class MovieRepo {
                 }
                 Log.d("get_ids", existingMovieIds.toString() + "iteration : " + inc)
                 inc = inc + 1
-                fetchTrendingMoviesFromTMDB("f822ee258fb1f07774b09e5ba51e04e7")
-                fetchPopularMoviesFromTMDB("f822ee258fb1f07774b09e5ba51e04e7") { callback() }
+
+
+                if (movieList != null) {
+                    movieList.forEach {
+                        if(it.id in existingMovieIds){
+                            it.liked = true
+                        }else{
+                            it.liked = false
+                        }
+                    }
+                    movieListTrend.forEach {
+                        if(it.id in existingMovieIds){
+                            it.liked = true
+                        }else{
+                            it.liked = false
+                        }
+                    }
+                }
+
+
+                callback()
+
                 // After fetching existing movies, fetch from TMDB
             }
             override fun onCancelled(error: DatabaseError) {

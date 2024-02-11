@@ -58,18 +58,19 @@ class MovieAdapter(
         holder.heart_icon?.setOnClickListener{
             currentMovie.liked = !currentMovie.liked
             if (currentMovie.liked){
-                holder.heart_icon?.setImageResource(R.drawable.filled_heart)
+                //holder.heart_icon?.setImageResource(R.drawable.filled_heart)
                 repo.UpdateMovie(currentMovie)
             }else{
-                holder.heart_icon?.setImageResource(R.drawable.ic_favorite)
+                //holder.heart_icon?.setImageResource(R.drawable.ic_favorite)
                 repo.deleteMovie(currentMovie)
             }
-            //notifyDataSetChanged()
+            notifyDataSetChanged()
         }
 
         // the moment we click on the movie
 
         holder.itemView.setOnClickListener{
+
             MovieDetail(this, currentMovie).show()
         }
     }
