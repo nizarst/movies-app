@@ -1,0 +1,30 @@
+[
+    {
+        "merged": "C:\\Users\\ismyahya\\.gradle\\daemon\\8.0\\com.landfathich.dreamfilm.app-mergeDebugResources-35:\\layout\\movie_details.xml",
+        "source": "C:\\Users\\ismyahya\\.gradle\\daemon\\8.0\\com.landfathich.dreamfilm.app-main-38:\\layout\\movie_details.xml"
+    },
+    {
+        "merged": "C:\\Users\\ismyahya\\.gradle\\daemon\\8.0\\com.landfathich.dreamfilm.app-mergeDebugResources-35:\\layout\\activity_main.xml",
+        "source": "C:\\Users\\ismyahya\\.gradle\\daemon\\8.0\\com.landfathich.dreamfilm.app-main-38:\\layout\\activity_main.xml"
+    },
+    {
+        "merged": "com.landfathich.dreamfilm.app-mergeDebugResources-35:/layout/vertical_movie_item.xml",
+        "source": "com.landfathich.dreamfilm.app-main-38:/layout/vertical_movie_item.xml"
+    },
+    {
+        "merged": "C:\\Users\\ismyahya\\.gradle\\daemon\\8.0\\com.landfathich.dreamfilm.app-mergeDebugResources-35:\\layout\\fragment_favorites.xml",
+        "source": "C:\\Users\\ismyahya\\.gradle\\daemon\\8.0\\com.landfathich.dreamfilm.app-main-38:\\layout\\fragment_favorites.xml"
+    },
+    {
+        "merged": "C:\\Users\\ismyahya\\.gradle\\daemon\\8.0\\com.landfathich.dreamfilm.app-mergeDebugResources-35:\\layout\\vertical_movie_item.xml",
+        "source": "C:\\Users\\ismyahya\\.gradle\\daemon\\8.0\\com.landfathich.dreamfilm.app-main-38:\\layout\\vertical_movie_item.xml"
+    },
+    {
+        "merged": "C:\\Users\\ismyahya\\.gradle\\daemon\\8.0\\com.landfathich.dreamfilm.app-mergeDebugResources-35:\\layout\\fragement_home.xml",
+        "source": "C:\\Users\\ismyahya\\.gradle\\daemon\\8.0\\com.landfathich.dreamfilm.app-main-38:\\layout\\fragement_home.xml"
+    },
+    {
+        "merged": "C:\\Users\\ismyahya\\.gradle\\daemon\\8.0\\com.landfathich.dreamfilm.app-mergeDebugResources-35:\\layout\\item_horizontal_movie.xml",
+        "source": "C:\\Users\\ismyahya\\.gradle\\daemon\\8.0\\com.landfathich.dreamfilm.app-main-38:\\layout\\item_horizontal_movie.xml"
+    }
+]

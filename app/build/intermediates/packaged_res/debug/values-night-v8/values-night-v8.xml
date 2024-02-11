@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="active_btn">#1B1A1A</color>
+    <color name="contrast_color_main">#FB7813</color>
+    <color name="end_color_bg">#321485</color>
+    <color name="non_active_btn">#505050</color>
+    <color name="start_color_bg">#653B06</color>
+    <color name="title_color">#FFFFFF</color>
+    <style name="Base.Theme.DreamFilm" parent="Theme.Material3.DayNight.NoActionBar">
+        
+        <item name="colorPrimary">#114670</item>
+        <item name="colorSecondary">#5E3211</item>
+        <item name="colorOutline">#008750</item>
+    </style>
+</resources>

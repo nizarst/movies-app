@@ -1,0 +1,20 @@
+{
+    "logs": [
+        {
+            "outputFile": "com.landfathich.dreamfilm.app-mergeDebugResources-34:/values-hdpi-v4/values-hdpi-v4.xml",
+            "map": [
+                {
+                    "source": "C:\\Users\\ismyahya\\.gradle\\caches\\transforms-3\\fd033421a9788c20fcde6d11e367f19f\\transformed\\appcompat-1.6.1\\res\\values-hdpi-v4\\values-hdpi-v4.xml",
+                    "from": {
+                        "startLines": "2",
+                        "startColumns": "4",
+                        "startOffsets": "55",
+                        "endLines": "6",
+                        "endColumns": "13",
+                        "endOffsets": "327"
+                    }
+                }
+            ]
+        }
+    ]
+}
